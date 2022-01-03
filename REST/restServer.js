@@ -26,6 +26,23 @@ const server = http.createServer(async (req,res) => {
       }catch(err){
         //주소가 해당하는 라우트를 못 찾았다는 404 Not Found error 발생
       }
+    } else if (req.method === 'POST'){
+      if (req.url === '/user'){
+        let body = ''
+        //요청의 body를 stream 형식으로 받음
+        req.on('data',(data) => {
+          body += data
+        })
+        // 요청의 body를 다 받은후 실행됨
+        return req.on('end', () => {
+          console.log('POST 본문(Body):',body)
+          const {name} = JSON.parse(body)
+          const id = Date.now()
+          users[id] = name
+          res.writeHead(201)
+          res.end('등록성공')
+        })
+      }
     }
     res.writeHead(404)
     return res.end('NOT FOUND')
