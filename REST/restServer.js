@@ -43,6 +43,19 @@ const server = http.createServer(async (req,res) => {
           res.end('등록성공')
         })
       }
+    } else if (req.method === 'PUT'){
+      if (req.url.startsWith('/user/')){
+        const key = req.url.split('/')[2]
+        let body = ''
+        req.on('data',(data) => {
+          body += data
+        })
+        return req.on('end', () => {
+          console.log('PUT 본문(Body):',body)
+          users[key] = JSON.parse(body).name
+          return res.end(JSON.stringify(users))
+        })
+      }
     }
     res.writeHead(404)
     return res.end('NOT FOUND')
