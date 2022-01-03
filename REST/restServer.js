@@ -56,6 +56,13 @@ const server = http.createServer(async (req,res) => {
           return res.end(JSON.stringify(users))
         })
       }
+    } else if(req.method === 'DELETE') {
+      if (req.url.startsWith('/user/')){
+        const key = req.url.split('/')[2]
+        delete users[key]
+        return res.end(JSON.stringify(users))
+      }
+
     }
     res.writeHead(404)
     return res.end('NOT FOUND')
